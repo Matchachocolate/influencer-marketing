@@ -1,0 +1,91 @@
+---
+title: "influencer-marketing-analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(readr)
+
+age_levels <- c(
+  "18-25", 
+  "26-35"
+)
+
+education_levels <- c(
+  "Senior high school degree or equivalent",
+  "Bachelor's degree",                     
+  "Master's degree or higher"              
+)
+
+frenquency_levels <-c(
+  "Less than once a month",
+  "About once a month",
+  "About once a week",
+  "About two to three times a week",
+  "About once a day",
+  "More than once a day" 
+)
+
+likert_levels <- c(
+  "Not likely at all",
+  "Slightly likely",   
+  "Moderately Likely",
+  "Very likely"       
+)
+
+d_dataframe <- read_csv(
+  './data/influencer-marketing-data.csv',
+  col_types = cols(
+    col_factor(),
+    col_factor(ordered = TRUE, levels = age_levels),
+    col_factor(ordered = TRUE, levels = education_levels),
+    col_factor(ordered = TRUE, levels = frenquency_levels),
+    col_factor(ordered = TRUE, levels = likert_levels),
+    col_factor(ordered = TRUE, levels = likert_levels),
+    
+  ))
+```
+
+
+```{r}
+library(ggplot2)
+
+d_dataframe %>%
+  ggplot(aes(
+    x = gender
+  )) + geom_bar()
+
+d_dataframe %>%
+  ggplot(aes(
+    x = age
+  )) + geom_bar()
+
+d_dataframe %>%
+  ggplot(aes(
+    x = education
+  )) + geom_bar()+coord_flip()
+
+
+d_dataframe %>%
+  ggplot(aes(
+    x = frequency
+  )) + geom_bar()+coord_flip()
+
+```
+
+```{r}
+d_dataframe_1 <- d_dataframe %>%
+  mutate(
+    informativeness = as.numeric(informativeness),
+    entertainment = as.numeric(entertainment)
+    )%>%
+  cor.test(~ informativeness + entertainment, method = 'spearman', data = .)
+
+```
+
+
+
+
+
